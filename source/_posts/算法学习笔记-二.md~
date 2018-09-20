@@ -1,0 +1,45 @@
+---
+title: 算法学习笔记(二)
+date: 2016-04-15 12:53:28
+tags:
+ -字符串
+categories: 算法
+---
+{% cq %}算法{% endcq %}
+<!-- more -->
+## KMP算法
+　　kmp算法是字符串匹配的一项经典算法，算法由它的三个发明者命名，具体思想就是当搜索到不匹配时，向前滑动一段距离再进行匹配。
+　　对每个匹配字符串保存一个next数组，记录每个词的前后缀最长公有序列长度，当匹配字符串p去匹配字符串s时，逐词匹配，匹配则后移继续匹配，不匹配则算一下p后跳距离=已匹配字符串长度$-$next表中值。
+　　算next代码如下:
+{% codeblock lang:python %}
+
+    def next(p):
+        next = [0]*len(p)
+        i,j = 0,1
+        for q in range(1,len(p)):
+            while(i>0 and p[q]!=p[i]):
+                i = next[i-1]
+            if(p[q]==p[i]):
+                i+=1
+            next[q] = i
+        return next
+            
+{% endcodeblock %}
+不好理解的是当p[q]!=p[i]时，i=next[i-1]，现在的前后缀最长是i,而p[q-i]...p[q-1]已经匹配，我们希望找到这个子串里面的前后缀最长子串长度就是next[i-1],所以令i=next[i-1]就好了。
+　　匹配代码如下：
+{% codeblock lang:python %}
+
+    def find_index(p,s):
+        ans = []
+        next1 = next(p)
+        k = 0
+        for i in range(len(s)):
+            while(k>0 and p[k]!=s[i]):
+                k = next1[k-1]
+            if(p[k]==s[i]):k+=1
+            if(k>=len(p)):
+                ans.append(i-len(p)+1)
+                k = next1[k-1]
+        return ans
+            
+{% endcodeblock %}

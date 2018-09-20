@@ -1,0 +1,46 @@
+---
+title: 机器学习算法介绍(五)--神经网络
+date: 2017-03-12 10:35:00
+tags:
+ - 机器学习
+ - 神经网络
+categories: 机器学习
+---
+<blockquote class="blockquote-center">神经网络</blockquote>
+<!-- more -->
+## 神经元
+如图：
+![error](/img/nerual.png)
+
+## SGD(随机梯度下降)
+相比于每次计算所有样例的梯度取平均值，随机梯度下降每次只随机选取一个样例计算梯度。
+好处：计算简便
+随机性，可以避免落入一些非常明显的局部最小值，因为每次的梯度具有波动性。
+非常简单，在很多最优化方法中算是比较简单的了。
+## 初始化参数
+不能初始化为０，否则隐藏层会都相同，随机初始化的目的是使对称失
+## 前向传播
+$a^{(l+1)}_{j}=g(\sum_{i=1}^{d^{(l)}}W_{ji}^{(l)}a_i^{(l)}+a_0^{(l)})$
+g是激活函数，可以选取tanh或者sigmoid
+##　代价函数
+$-\frac{1}{m}(\sum_{i=1}^{m}\sum_{k=1}^{K}(y_k^ilog(h_\theta(x^i)_k)+(1-y_k^i)log(1-h_\theta(x^i)_k))+\frac{\lambda}{2m}\sum_{l=1}^{L-1}\sum_{j=1}^{s^{(l)}}\sum_{i=1}^{s^{(l-1)}}(W_{ji}^{(l)})^2$
+这个代价函数针对分类问题，后面那一项是正则化项
+## 正则化的意义
+正则化是添加一个调优参数的过程模型来引导平滑以防止过拟合。(参加KDnuggets文章《过拟合》)这通常是通过添加一个常数到现有的权向量。这个常数通常要么是L1(Lasso)要么是L2(ridge)，但实际上可以是任何标准。该模型的测算结果的下一步应该是将正则化训练集计算的损失函数的均值最小化。
+
+## 反向传播
+对$W_{ji}^{(l)}$和$b^{(l)}$求偏导
+$\frac{\partial}{\partial{W_{ji}^{(l)}}}J(W,b)=\frac{\partial{J(W,b)}}{\partial{z_{j}^{(l+1)}}}.\frac{\partial{z_{j}^{(l+1)}}}{\partial{W_{ji}^{(l)}}}=\delta_j^{(l+1)}a_i^{(l)}$
+$\frac{\partial}{\partial{b^{(l)}}}J(W,b)=\delta_j^{(l+1)}$
+再来求偏差$\delta$:
+$\delta_{j}^{(l)}=\frac{\partial{J(W,b)}}{\partial{z_{j}^{(l)}}}=\sum_{i=1}^{s^{(l+1)}}\frac{\partial{J(W,b)}}{\partial{z_{i}^{(l+1)}}}\frac{\partial{z_{i}^{(l+1)}}}{\partial{a_{j}^{(l)}}}\frac{\partial{a_j^{(l)}}}{\partial{z_j^{(l)}}}=\sum_{i=1}^{s^{(l+1)}}(\delta_{i}^{(l+1)}W_{ij}^{(l)})g^{'}(z_j^{(l)})$
+其中$g(z_j^{(l)})=a_j^{(l)}$,若$g$为sigmoid函数，则$g^{'}(z_j^{(l)})=a_j^{(l)}(1-a_j^{(l)})$
+最后一层的残差为:
+$\delta_i^{(L)}=-(y_i-a_i^{(L)})g^{'}(z_i^{(L)})$(假设为均方误差)
+更新权重:
+$\bigtriangledown{W}_{(l)}=\delta^{(l+1)}(a^{(l)})^T$
+$\bigtriangleup{W}:=\bigtriangleup{W}+\bigtriangledown{W}_{(l)}$
+$\bigtriangleup{b}:=\bigtriangleup{b}+\bigtriangledown{b}_{(l)}$
+$W^{(l)}-=\alpha(\frac{1}{m}\bigtriangleup{W}+\lambda{W}^{(l)})$
+$b^{(l)}-=\alpha(\frac{1}{m}\bigtriangleup{b})$
+
