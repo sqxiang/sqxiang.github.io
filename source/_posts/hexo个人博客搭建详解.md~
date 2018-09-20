@@ -1,0 +1,137 @@
+---
+title: hexo个人博客搭建详解
+date: 2016-04-11 01:19:08
+tags: hexo
+categories: 技术
+---
+{% cq %}开始搭建博客{% endcq %}
+<!-- more -->
+# 第一步:nodeJS和hexo安装
+## nodejs安装
+nodejs有三种安装方法，如下:
+
+ - 1.官网下载:<https://nodejs.org/en/download/>
+ - 2.使用apt-get，不过只有老版本`sudo apt-get install nodejs`apt的源里面没有最新的nodejs 这个package。node自己提供了源如果要安装5.x版本，那么可以运行下面两行命令：
+
+     curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -
+     sudo apt-get install -y nodejs
+    
+
+ - 3.使用nvm进行安装，两条命令:
+
+
+    curl https://raw.github.com/creationix/nvm/master/install.sh | sh
+    wget -qO- https://raw.github.com/creationix/nvm/master/install.sh | sh
+    
+
+完成后输入`nvm install 4`即可安装。
+我是通过第三种方式安装成功的
+## hexo安装
+前提是你git也安装好了，linux上git安装很简单，一句`sudo apt-get install git-core`即可，与github之间配置ssh，由于我很久以前就在用github了，所以ssh以及配好了，如果第一次用可以参考网上教程[如何配置ssh](http://crazymilk.github.io/2015/12/28/GitHub-Pages-Hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/#more)
+hexo安装很简单，一句话搞定:
+
+    npm install -g hexo-cli
+## 问题
+我最初有一版本的nodejs，不过比较老，装了npm后安装hexo成功，但是在hexo安装依赖时出了问题，本人比较愚蠢，不知道该怎么处理，于是暴力解决，删掉了hexo和nodejs。
+### 先卸载hexo
+比较简单`npm uninstall hexo-cli -g`,期间一直有个问题百思不得其解，那就是最开始用npm得要sudo，后来用nvm的不用，权限问题一直不太清楚。
+### 卸载nodejs
+
+    sudo apt-get remove nodejs
+
+上面的命令用于删除编译安装的nodejs，如果你是下载的nodejs官网编译好了的，有两个文件夹十分重要，一个是`/usr/local/bin`,一个是`/usr/bin`,编译好后要链接到第一个文件夹，用`ln -s source_file /usr/local/bin/node`以及`ln -s source_file /usr/local/bin/npm`。
+当然删除的时候也要删除这两个文件，有时在`/usr/bin`中也会有这两个文件的话也要删除。hexo默认的是nodejs,因此在链接时还要链接`ln -s /usr/local/bin/node /usr/local/bin/nodejs`删除的时候也别忘了。
+参考链接:
+
+ 1. [hexo官网教程](https://hexo.io/zh-cn/docs/index.html)
+ 2. [在ubuntu下安装nodejs](http://www.linuxidc.com/Linux/2012-08/67339.htm)
+ 3. [在ubuntu下安装nodejs的正确姿势](http://www.cnblogs.com/chenxizhang/p/5222918.html)
+
+# 第二步：使用hexo建站
+建站时有一个小问题，网上大都说直接在你的某一文件夹下hexo init就可以，但是并不能成功，看了下文档，应该是主文件夹内用`hexo init <folder>`命令，folder是你想要放置博客的位置。下面是建站步骤。
+## github配置
+为了让以后可以在其他电脑上写博客并上传，这里我们采用了两个分支的方法，一个`hexo`，一个`master`，首先，在github上注册一个号，我已经注册过了，第一次注册记得配置ssh，再贴一遍[ssh配置方法](http://blog.csdn.net/binyao02123202/article/details/20130891),然后new一个repository，如图：
+![error](/img/pic1.png)
+记得名字要用`username.github.io`,username是你github的名字，建好后新建一个分支hexo，或者暂时放在一边。
+## 站点部署
+像我上面说的，用`hexo init <folder>`建立你要存放站点的文件夹，此时文件夹内结构如下:
+├── _config.yml
+├── package.json
+├── scaffolds
+├── source
+|   ├── _drafts
+|   └── _posts
+└── themes
+然后输入以下命令:
+
+    cd <folder> #进入文件夹
+    npm install #下载依赖
+    npm install hexo-deployer-git --save #插件，用于部署到github,后面的--save很重要
+然后`vim _config.yml`打开config文件后找到deploy,修改成如下:
+
+    deploy:
+    type: git
+    repo: 对应仓库的SSH地址（可以在GitHub对应的仓库中复制）
+    branch: master
+此时站点的基本配置算是完成了，但别忙着hexo g生成，为了提交到github的hexo分支，得先做几件事。
+## 本地仓库与github同步
+在你的站点内输入以下命令:
+
+    git init #初始化仓库
+    git remote add origin 你的github的http地址
+    git checkout -b hexo #切换到hexo分支
+    git add .  #文件加入暂存区
+    git commit -m "something" #提交文件
+    git push -u origin hexo #同步到github上的hexo分支
+小问题：第二条命令的输入位置可以换到push之前，还有就是有可能是我当时github上的repository是空的，没有添加分支，所以无法切换到hexo，不过提交能提交到hexo分支，但此时没有master分支，需要自己再建一个,命令如下:
+
+    git branch master
+万事俱备了，现在可以提交站点了，记得此时在你文件夹中的git分支一定要处于hexo分支，master除了刚刚建立这个步骤外什么都不要操作（很重要）。在hexo分支，输入如下命令:
+
+    hexo g  #生成网站
+    hexo d  #部署到github上
+# 第三步:建站完成之后
+好了，现在打开你的github进入`username.github.io`这个仓库，你应该看到两个分支，在hexo分支下和你的本地网站文件夹内容应该是一样的，只少了public，你的master分支是生成的网站文件，这样就算完成了网站基础文件和生成文件的分离。
+解释一下:public其实就是你生成的网站文件，若是不建立分支，public和themes都会在一个分支里，现在public跑到了master下。刚才为什么要在hexo分支下生成网站呢？原因也在这，生成网站所需的基础文件都在hexo分支下，你可以试试换成master分成输入hexo g，会报错的。由于`_config.yml`里表明了deploy的分支是master，因此生成网站才会跑到master分支。
+__以后一切操作都在hexo分支下进行__
+## 换电脑发博
+
+使用`git clone git@github.com:username/username.github.io.git`拷贝仓库（默认分支为hexo）；
+在本地新拷贝的`username.github.io`文件夹下通过Git bash(win)依次执行下列指令：`npm install hexo、npm install、npm install hexo-deployer-git`（记得，不需要hexo init这条指令）。
+写完博文后，记得`git add .`,`git commit -m "..."`,`git push origin hexo`，当然你也可以不同步，不过建议最好每次修改后都同步一下。然后`hexo g`,`hexo d`部署到github上。
+## 换主题
+hexo一开始默认的主题是lanscape，其实个人觉得很好了，不过每个人当然希望自己的博客个性化一点，所有就有了很多大牛写的主题(themes),主题可以去官网找:<https://hexo.io/themes/>,
+或者在github上的主题<https://github.com/hexojs/hexo/wiki/Themes>这上面比较全面一点，有的博主推荐的主题:
+
+[Cover](https://github.com/daisygao/hexo-themes-cover)- A chic theme with facebook-like cover photo
+[Oishi](https://github.com/henryhuang/oishi)- A white theme based on Landscape plus and Writing.
+[Sidebar](https://github.com/hardywu/hexo-theme-sidebar)- Another theme based on Light with a simple sidebar
+[TKL](https://github.com/SuperKieran/TKL)- A responsive design theme for Hexo. 一个设计优雅的响应式主题,我用的这个
+[Writing](https://github.com/yunlzheng/hexo-themes-writing)- A small and simple hexo theme based on Light
+[Yilia](https://github.com/litten/hexo-theme-yilia)- Responsive and simple style 优雅简洁响应式主题。
+文／潘柏信（简书作者）
+原文链接：http://www.jianshu.com/p/465830080ea9
+
+挑好主题后，下载下来,`git@github.com:<username>/<repository>.git themes/<themesname>`对应主题的地址克隆下来就好，然后`cd themes/<themesname>`,`git pull`,主题就提交到了你的hexo分支上了，修改一下`_config.yml`文件，把theme改成你下的theme的名字，最后提交到github，重新生成网站就ok了。具体themes的修改不同的有不同的方式。
+
+## 发文章
+
+    hexo n [layout] "pageName" #新建一篇博客，layout为可选项
+hexo n是hexo new的简写，layout可以去scaffolds文件夹看，文件名字就是layout名字，可以不写。然后在`source/_posts`下会生成一个md文件，用markdown编辑器打开（当然你直接用vim或者gedit，txt都没有问题),就可以开始写作了。语法是markdown语法，参考如下:
+<http://wowubuntu.com/markdown/basic.html>或者
+<http://ibruce.info/2013/11/26/markdown/>
+我用的编辑器是cmd编辑器，可以支持预览，界面如下:
+![error](/img/pic3.png)
+写完文章之后hexo g生成，hexo s可以在server上先预览一下，然后再hexo d部署到github服务器，记得push同步。如果文章有格式错误将报错。
+
+# 参考链接
+【1】[hexo你的博客(ibruce博客)](http://ibruce.info/2013/11/22/hexo-your-blog/)
+【2】[Hexo All Themes](https://github.com/hexojs/hexo/wiki/Themes)
+【3】[Pacman主题介绍](http://yangjian.me/pacman/hello/introducing-pacman-theme/)
+【4】[hexo添加404页面](http://ruocaiwu.github.io/2014/08/14/hexo%E6%B7%BB%E5%8A%A0404%E9%A1%B5%E9%9D%A2/)
+【5】[如何搭建一个独立博客——简明Github Pages与Hexo教程](http://cnfeat.com/2014/05/10/2014-05-11-how-to-build-a-blog/)
+【6】[如何向google提交sitemap（详细）](http://fionat.github.io/blog/2013/10/23/sitemap/)
+【7】[GitHub Ribbons](https://github.com/blog/273-github-ribbons)
+【8】[hexo官方文档](https://hexo.io/zh-cn/docs/index.html)
+【9】[GitHub Pages + Hexo搭建博客(crazymilk博客)](http://crazymilk.github.io/2015/12/28/GitHub-Pages-Hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/#more)
+【10】[markdown简书](http://www.jianshu.com/p/q81RER)
