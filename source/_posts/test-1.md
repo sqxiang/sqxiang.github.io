@@ -8,7 +8,7 @@ tags: test
 
 ```python
 import os
-print(os.path.exists("我的世界"))
+print(os.path.exists("我的世界--芊芊"))
 ```
 
 | 1    | 3    |
