@@ -5,7 +5,10 @@ tags: caffe
 categories: 机器学习
 ---
 
-五大Layer派生类型
+<blockquote class="blockquote-center">五大Layer派生类型</blockquote>
+
+<!-- more -->
+
 Caffe十分强调网络的层次性，也就是说卷积操作，非线性变换（ReLU等），Pooling，权值连接等全部都由某一种Layer来表示。具体来说分为5大类Layer
 1.NeuronLayer类 定义于neuron_layers.hpp中，其派生类主要是元素级别的运算（比如Dropout运算，激活函数ReLu，Sigmoid等），运算均为同址计算（in-place computation，返回值覆盖原值而占用新的内存）。
 2.LossLayer类 定义于loss_layers.hpp中，其派生类会产生loss，只有这些层能够产生loss。

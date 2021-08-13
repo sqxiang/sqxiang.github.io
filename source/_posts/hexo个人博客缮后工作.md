@@ -6,6 +6,7 @@ categories: 技术
 ---
 <blockquote class="blockquote-center">博客搭建之后</blockquote>
 <!-- more -->
+
 ### 数学公式
 今天想在hexo里面试一下latex的公式管不管用，果然是不行的，于是查了很多资料，找到一篇不错的博客:[搭建一个支持latex的hexo博客](http://blog.csdn.net/emptyset110/article/details/50123231)
 仿照他的方法，成功实现了公式的输入。
