@@ -1,0 +1,803 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="机器学习,Adaboost,弱分类器,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1">
+
+
+
+
+
+
+<meta name="description" content="Adaboost">
+<meta name="keywords" content="机器学习,Adaboost,弱分类器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习算法介绍(三)--Adaboost">
+<meta property="og:url" content="http://yoursite.com/2016/05/02/机器学习算法介绍-三-Adaboost/index.html">
+<meta property="og:site_name" content="Alex的博客">
+<meta property="og:description" content="Adaboost">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/img/ada1.jpeg">
+<meta property="og:image" content="http://yoursite.com/img/ada2.jpeg">
+<meta property="og:image" content="http://yoursite.com/img/ada3.jpeg">
+<meta property="og:image" content="http://yoursite.com/img/ada4.jpeg">
+<meta property="og:image" content="http://yoursite.com/img/ada5.jpeg">
+<meta property="og:image" content="http://yoursite.com/img/ada6.jpeg">
+<meta property="og:image" content="http://yoursite.com/img/ada4.jpeg">
+<meta property="og:image" content="http://yoursite.com/img/ada7.jpeg">
+<meta property="og:image" content="http://yoursite.com/img/ada8.jpeg">
+<meta property="og:image" content="http://yoursite.com/img/ada4.jpeg">
+<meta property="og:image" content="http://yoursite.com/img/ada1.png">
+<meta property="og:image" content="http://yoursite.com/img/ada2.png">
+<meta property="og:image" content="http://yoursite.com/img/ada3.png">
+<meta property="og:image" content="http://yoursite.com/img/ada4.png">
+<meta property="og:image" content="http://yoursite.com/img/ada5.png">
+<meta property="og:image" content="http://yoursite.com/img/ada9.jpeg">
+<meta property="og:image" content="http://yoursite.com/img/ada10.jpeg">
+<meta property="og:image" content="http://yoursite.com/img/ada11.jpeg">
+<meta property="og:image" content="http://yoursite.com/img/ada12.jpeg">
+<meta property="og:image" content="http://yoursite.com/img/ada13.jpeg">
+<meta property="og:image" content="http://yoursite.com/img/ada14.jpeg">
+<meta property="og:image" content="http://yoursite.com/img/ada15.jpeg">
+<meta property="og:updated_time" content="2022-10-10T03:50:42.622Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习算法介绍(三)--Adaboost">
+<meta name="twitter:description" content="Adaboost">
+<meta name="twitter:image" content="http://yoursite.com/img/ada1.jpeg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: 'Author'
+    }
+  };
+</script>
+
+  <title> 机器学习算法介绍(三)--Adaboost | Alex的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang>
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Alex的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                机器学习算法介绍(三)--Adaboost
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2016-05-02T14:41:41+08:00" content="2016-05-02">
+              2016-05-02
+            </time>
+          </span>
+
+          
+            <span class="post-category">
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/02/机器学习算法介绍-三-Adaboost/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/02/机器学习算法介绍-三-Adaboost/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/05/02/机器学习算法介绍-三-Adaboost/" class="leancloud_visitors" data-flag-title="机器学习算法介绍(三)--Adaboost">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">visitors </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><blockquote class="blockquote-center">Adaboost</blockquote><br><a id="more"></a><br>参考了几篇博客，发现大同小异，adaboost还是比较简单的。</p>
+<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><p>几个弱分类器组合成一个强分类器，是一个迭代算法。怎么迭代？前一个分类器分错的数据，给它加大权重放到下一个分类器继续训练。为什么这样？你要前面错了，我再着重考虑你训练一次，你还错，那这个分类器错误率就比较高，根据权重计算公式$\alpha_t=\frac{1}{2}In(\frac{1-\epsilon_t}{\epsilon_t})$，误差$\epsilon_t$越大，权重越小。<br>　 最开始是boosting,以前还有过bootstaping和bagging的方法，不过都是简单的组合弱分类器，adaboost强在哪?ada是自适应的意思，它的自适应在于：前一个基本分类器分错的样本会得到加强，加权后的全体样本再次被用来训练下一个基本分类器。这就是它流弊的地方。</p>
+<h2 id="算法流程"><a href="#算法流程" class="headerlink" title="算法流程"></a>算法流程</h2><p>给定一个训练集${(x_1,y_1),(x_2,y_3)…(x_n,y_n)}$,其中$y\in {-1,+1}$,Adaboost的目的就是从训练数据中学习一系列弱分类器或基本分类器，然后将这些弱分类器组合成一个强分类器。<br>1.首先初始化训练数据集的权值分布(这里的权值与分类器权重不一样),一般用平均吧，<br>$$<br>D_1=(w_{11},w_{12},…w_{1n}),w_{1i}=\frac{1}{n},i=1,2,3..n<br>$$<br>2.$m=1,2,..M$，当训练了$m$次后的权值集合为$D_m$,使用此权值集合分类数据集，得到二分类器$G_m$(本质上是一个决策树)比如:(E是决策树的分割点)<br>$$<br>G_m={\begin{matrix}1,x&gt;E \<br>-1,x&lt;=E\end{matrix}<br>$$<br>3.计算$G_m$在数据集上的误差率,<br>$$<br>e_m=P(G_m(x_i)\neq y_i)=\sum\limits_{i=1}^{n}w_{mi}I(G_m(x_i)\neq y_i)<br>$$<br>4.计算$G_m(x)$的系数，$a_m$表示$G_m(x)$在最终分类器中的重要程度：<br>$$<br>\alpha_m=\frac{1}{2}In(\frac{1-e_m}{e_m})<br>$$<br>这与前面提过的公式一样。由上述式子可知，$e_m &lt;= 1/2$时，$a_m &gt;= 0$，且$a_m$随着$e_m$的减小而增大，意味着分类误差率越小的基本分类器在最终分类器中的作用越大。<br>5.更新训练数据集的权值集合$D_{m+1}$<br>$$<br>D_{m+1}=(w_{m+1\,1},w_{m+1\,2},…w_{m+1\,n}),\w_{m+1\,i}=\frac{w_{mi}}{Z_m}exp(-\alpha_my_iG_m(x_i)),i=1,2,3..n<br>$$<br>其中$Z_m=\sum\limits_{i=1}^{n}w_{mi}exp(-\alpha_my_iG_m(x_i))$是一个规范化因子，为了让所有训练数据的权值概率和为1，而其中我们可以看出当训练数据被正确分类时$y_iG_m(x_i)=1$，分类错误时$y_iG_m(x_i)=-1$，再加上$\alpha_m$对所有训练数据的权值贡献相同，所以当数据分类错误时$w_{mi}exp(-\alpha_my_iG_m(x_i))&gt;w_{mi}$，权值增大了，分类正确时相反权值减小。<br>6.构建最终的分类器<br>$$<br>f(x)=\sum\limits_{m=1}^{n}\alpha_mG_m(x)\<br>G(x)=sign(f(x))<br>$$</p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>下面，给定下列训练样本，请用AdaBoost算法学习一个强分类器。<br><img src="/img/ada1.jpeg" alt="ada1"><br>求解过程：初始化训练数据的权值分布，令每个权值$W_{1i} = 1/N = 0.1$，其中，N = 10，i = 1,2, …, 10，然后分别对于m = 1,2,3, …等值进行迭代。</p>
+<p>迭代过程1：对于m=1，在权值分布为D1的训练数据上，阈值v取2.5时误差率最低，故基本分类器为：<br><img src="/img/ada2.jpeg" alt="ada2"><br>从而可得G1(x)在训练数据集上的误差率$e_1=P(G_1(x_i)≠y_i) = 0.3$<br>然后计算G1的系数：<br><img src="/img/ada3.jpeg" alt="ada3"><br>接着更新训练数据的权值分布：<br><img src="/img/ada4.jpeg" alt="ada4"><br>最后得到各个数据的权值分布：<br>$D_2=(0.0715, 0.0715, 0.0715, 0.0715, 0.0715,\ 0.0715, 0.1666, 0.1666, 0.1666, 0.0715)$，分类函数$f_1(x)=0.4236G_1(x)$，故最终得到的分类器$sign(f_1(x))$在训练数据集上有3个误分类点。</p>
+<p>迭代过程2：对于m=2，在权值分布为D2的训练数据上，阈值v取8.5时误差率最低，故基本分类器为：<br><img src="/img/ada5.jpeg" alt="ada5"><br>G2(x)在训练数据集上的误差率$e_2=P(G2(x_i)≠y_i) = 0.2143$</p>
+<p>计算G2的系数：<br><img src="/img/ada6.jpeg" alt="ada6"><br>更新训练数据的权值分布：<br><img src="/img/ada4.jpeg" alt="ada4"><br>$D_3=(0.0455, 0.0455, 0.0455, 0.1667, 0.1667, 0.01667,\ 0.1060, 0.1060, 0.1060, 0.0455)$<br>$f_2(x)=0.4236G_1(x) + 0.6496G_2(x)$</p>
+<p>分类器$sign(f_2(x))$在训练数据集上有3个误分类点。</p>
+<p>迭代过程3：对于m=3，在权值分布为D3的训练数据上，阈值v取5.5时误差率最低，故基本分类器为：<br><img src="/img/ada7.jpeg" alt="ada7"><br>G3(x)在训练数据集上的误差率$e_3=P(G_3(x_i)≠y_i) = 0.1820$<br>计算G3的系数：<br><img src="/img/ada8.jpeg" alt="ada8"><br>更新训练数据的权值分布：<br><img src="/img/ada4.jpeg" alt="ada4"><br>$D_4=(0.125, 0.125, 0.125, 0.102, 0.102, 0.102, 0.065,\ 0.065, 0.065, 0.125)，\f_3(x)=0.4236G_1(x) + 0.6496G_2(x)+0.7514G_3(x)$，分类器$sign(f_3(x))$在训练数据集上有0个误分类点。<br>这也是最终的分类器。<br>下面再看一个图示：<br><img src="/img/ada1.png" alt="ada1"><br>图中，“+”和“-”分别表示两种类别，在这个过程中，我们使用水平或者垂直的直线作为分类器，来进行分类。<br>第一步:<br><img src="/img/ada2.png" alt="ada2"><br>根据分类的正确率，得到一个新的样本分布D2­，一个子分类器h1<br>其中划圈的样本表示被分错的。在右边的途中，比较大的“+”表示对该样本做了加权。<br>第二步:<br><img src="/img/ada3.png" alt="ada3"><br>根据分类的正确率，得到一个新的样本分布D3，一个子分类器h2.<br>第三步:<br><img src="/img/ada4.png" alt="ada4"><br>第四步，整合所有子分类器<br><img src="/img/ada5.png" alt="ada5"></p>
+<h2 id="误差界"><a href="#误差界" class="headerlink" title="误差界"></a>误差界</h2><p>通过上面的例子可知，Adaboost在学习的过程中不断减少训练误差e，那这个误差界到底是多少呢？<br>事实上，adaboost 的训练误差的上界为：<br><img src="/img/ada9.jpeg" alt="ada9"><br>下面，咱们来通过推导来证明下上述式子。<br>当$G(x_i)≠y_i$时，$y_i<em>f(x_i)&lt;0$，因而$exp(-y_i</em>f(x_i))≥1$，因此前半部分得证。</p>
+<p>关于后半部分，别忘了：<br><img src="/img/ada10.jpeg" alt="ada10"><br>整个的推导过程如下：<br><img src="/img/ada11.jpeg" alt="ada11"><br>这个结果说明，可以在每一轮选取适当的$G_m$使得$Z_m$最小，从而使训练误差下降最快。接着，咱们来继续求上述结果的上界。<br>对于二分类而言，有如下结果：<br><img src="/img/ada12.jpeg" alt="ada12"><br>其中，<img src="/img/ada13.jpeg" alt="ada13">。</p>
+<p>继续证明下这个结论。</p>
+<p>由之前$Z_m$的定义式跟本节最开始得到的结论可知：<br><img src="/img/ada14.jpeg" alt="ada14"><br>而这个不等式可先由$e^x$和$1-x$的开根号，在点x的泰勒展开式推出。<br>值得一提的是，如果取$\gamma 1, γ2…$ 的最大值，记做$γ$（显然，$γ≥γ_i&gt;0，i=1,2,…m$），则对于所有$m$，有：<br><img src="/img/ada15.jpeg" alt="ada15"><br>这个结论表明，AdaBoost的训练误差是以指数速率下降的。另外，AdaBoost算法不需要事先知道下界$γ$，AdaBoost具有自适应性，它能适应弱分类器各自的训练误差率 。</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="http://blog.csdn.net/dark_scope/article/details/14103983" target="_blank" rel="noopener">AdaBoost–从原理到实现</a><br><a href="http://blog.csdn.net/tiandijun/article/details/48036025" target="_blank" rel="noopener">Adaboost 算法实例解析</a><br><a href="http://blog.csdn.net/haidao2009/article/details/7514787" target="_blank" rel="noopener">浅谈 Adaboost 算法</a><br><a href="http://www.kuqin.com/shuoit/20141104/343009.html" target="_blank" rel="noopener">Adaboost 算法的原理与推导</a></p>
+
+      
+    </div>
+    
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+            <a href="/tags/Adaboost/" rel="tag">#Adaboost</a>
+          
+            <a href="/tags/弱分类器/" rel="tag">#弱分类器</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/04/28/哈夫曼树/" rel="next" title="哈夫曼树">
+                <i class="fa fa-chevron-left"></i> 哈夫曼树
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/08/python的各种函数/" rel="prev" title="python的各种函数">
+                python的各种函数 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/05/02/机器学习算法介绍-三-Adaboost/" data-title="机器学习算法介绍(三)--Adaboost" data-url="http://yoursite.com/2016/05/02/机器学习算法介绍-三-Adaboost/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/default_avatar.jpg" alt="Siqi Xiang">
+          <p class="site-author-name" itemprop="name">Siqi Xiang</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">23</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sqxiang" target="_blank" title="github">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/1978268491" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本原理"><span class="nav-number">1.</span> <span class="nav-text">基本原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#算法流程"><span class="nav-number">2.</span> <span class="nav-text">算法流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#例子"><span class="nav-number">3.</span> <span class="nav-text">例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#误差界"><span class="nav-number">4.</span> <span class="nav-text">误差界</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考链接"><span class="nav-number">5.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Siqi Xiang</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"sqxiang"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("8DLu5uaqHg23PnzE4XOMzT4C-gzGzoHsz", "HnUpGtm2HfJiKUvs5qNdJXxd");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+</body>
+</html>

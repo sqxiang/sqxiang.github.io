@@ -1,0 +1,773 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="数据结构,二叉树,哈夫曼树,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1">
+
+
+
+
+
+
+<meta name="description" content="哈夫曼树">
+<meta name="keywords" content="数据结构,二叉树,哈夫曼树">
+<meta property="og:type" content="article">
+<meta property="og:title" content="哈夫曼树">
+<meta property="og:url" content="http://yoursite.com/2016/04/28/哈夫曼树/index.html">
+<meta property="og:site_name" content="Alex的博客">
+<meta property="og:description" content="哈夫曼树">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/img/huff1.png">
+<meta property="og:image" content="http://yoursite.com/img/huff2.png">
+<meta property="og:image" content="http://yoursite.com/img/huff3.jpg">
+<meta property="og:image" content="http://yoursite.com/img/huff4.jpg">
+<meta property="og:updated_time" content="2022-10-10T03:50:42.621Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="哈夫曼树">
+<meta name="twitter:description" content="哈夫曼树">
+<meta name="twitter:image" content="http://yoursite.com/img/huff1.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: 'Author'
+    }
+  };
+</script>
+
+  <title> 哈夫曼树 | Alex的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang>
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Alex的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                哈夫曼树
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2016-04-28T19:44:43+08:00" content="2016-04-28">
+              2016-04-28
+            </time>
+          </span>
+
+          
+            <span class="post-category">
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/数据结构/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/28/哈夫曼树/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/28/哈夫曼树/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/04/28/哈夫曼树/" class="leancloud_visitors" data-flag-title="哈夫曼树">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">visitors </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><blockquote class="blockquote-center">哈夫曼树</blockquote><br><a id="more"></a><br>　　哈夫曼树又称最优二叉树，是一种带权路径长度最短的二叉树。所谓树的带权路径长度，就是树中所有的叶结点的权值乘上其到根结点的路径长度（若根结点为0层，叶结点到根结点的路径长度为叶结点的层数）。树的带权路径长度记为<br>$$WPL=(W1<em>L1+W2</em>L2+W3<em>L3+…+Wn</em>Ln)$$，N个权值$Wi(i=1,2,…n)$构成一棵有N个叶结点的二叉树，相应的叶结点的路径长度为$Li(i=1,2,…n)$可以证明哈夫曼树的WPL是最小的。<br>　　根据哈弗曼树的定义，一棵二叉树要使其WPL值最小，必须使权值越大的叶子结点越靠近根结点，而权值越小的叶子结点越远离根结点。<br>　　哈夫曼编码步骤：</p>
+<p>　　一、对给定的n个权值${W1,W2,W3,…,Wi,…,Wn}$构成n棵二叉树的初始集合$F= {T1,T2,T3,…,Ti,…,Tn}$，其中每棵二叉树$Ti$中只有一个权值为$Wi$的根结点，它的左右子树均为空。（为方便在计算机上实现算法，一般还要求以$Ti$的权值$Wi$的升序排列。）<br>　　二、在$F$中选取两棵根结点权值最小的树作为新构造的二叉树的左右子树，新二叉树的根结点的权值为其左右子树的根结点的权值之和。<br>　　三、从$F$中删除这两棵树，并把这棵新的二叉树同样以升序排列加入到集合$F$中。<br>　　四、重复二和三两步，直到集合F中只有一棵二叉树为止。<br>　　比如我们现在有$A,B,C,D,E$五个结点，每个的权值（哈夫曼编码中指出现频率）为５，４，３，２，１，那么每一步取最小的两个权值向上生长即可，第一步取２和１，如下图:<br><img src="/img/huff1.png" alt><br>　　虚线为新生成的结点，第二步再把新生成的权值为3的结点放到剩下的集合中，所以集合变成{5,4,3,3}，再根据第二步，取最小的两个权值构成新树，如图：<br><img src="/img/huff2.png" alt><br>　　再依次建立哈夫曼树，如下图：<br><img src="/img/huff3.jpg" alt><br>　　如果要对字符进行哈夫曼编码，则规定哈夫曼树中所有左分支表示字符0，所有右分支表示字符1,将依次从根结点到每个叶子结点所经过的分支的二进制位的序列作为该结点对应的字符编码。<br>　　由于从根结点到任何一个叶子结点都不可能经过其他叶子，这种编码一定是前缀编码，哈夫曼树的带权路径长度正好是文件编码的总长度。<br>　　什么是带权路径长度，我们可以有如下定义：<br><strong>路径： 树中一个结点到另一个结点之间的分支构成这两个结点之间的路径。<br>路径长度：路径上的分枝数目称作路径长度。<br>树的路径长度：从树根到每一个结点的路径长度之和。<br>结点的带权路径长度：在一棵树中，如果其结点上附带有一个权值，通常把该结点的路径长度与该结点上的权值                                       之积称为该结点的带权路径长度（weighted path length）</strong><br>　　编码后的哈夫曼树如下:<br> <img src="/img/huff4.jpg" alt><br>　　则各字符对应的编码为：$A-&gt;11,B-&gt;10,C-&gt;00,D-&gt;011,E-&gt;010$<br>　　霍夫曼编码是一种前缀编码。解码时不会混淆。其主要应用在数据压缩，加密解密等场合。<br>源代码如下:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">　<span class="class"><span class="keyword">class</span> <span class="title">Node</span><span class="params">(object)</span>:</span></span><br><span class="line">    　<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,parent=None,lchild=None,rchild=None,weight=<span class="number">0</span>,ch=None)</span>:</span></span><br><span class="line">        　self.parent=parent</span><br><span class="line">        　self.lchild=lchild</span><br><span class="line">        　self.rchild=rchild</span><br><span class="line">        　self.weight=weight</span><br><span class="line">        　self.ch = ch</span><br><span class="line"></span><br><span class="line">　<span class="function"><span class="keyword">def</span> <span class="title">createNodes</span><span class="params">(Ht)</span>:</span></span><br><span class="line">    　<span class="keyword">return</span> [Node(weight=value,ch=key) <span class="keyword">for</span> key,value <span class="keyword">in</span> Ht.iteritems()]</span><br><span class="line"></span><br><span class="line">　<span class="function"><span class="keyword">def</span> <span class="title">huffman</span><span class="params">(ht)</span>:</span></span><br><span class="line">    　htNodes = createNodes(ht)</span><br><span class="line">    　nodes = htNodes[:]</span><br><span class="line">    　<span class="keyword">while</span> len(nodes)&gt;<span class="number">1</span>:</span><br><span class="line">        　nodes.sort(key=<span class="keyword">lambda</span> x:x.weight)</span><br><span class="line">        　m1 = nodes.pop(<span class="number">0</span>)</span><br><span class="line">        　m2 = nodes.pop(<span class="number">0</span>)</span><br><span class="line">        　p = Node(weight=m1.weight+m2.weight)</span><br><span class="line">        　p.lchild = m1</span><br><span class="line">        　p.rchild = m2</span><br><span class="line">        　m1.parent,m2.parent = p,p</span><br><span class="line">        　nodes.append(p)</span><br><span class="line">    　root = nodes[<span class="number">0</span>]</span><br><span class="line">    　<span class="keyword">return</span> htNodes,root</span><br><span class="line"></span><br><span class="line">　<span class="function"><span class="keyword">def</span> <span class="title">huffcode</span><span class="params">(ht)</span>:</span></span><br><span class="line">    　nodes,root = huffman(ht)</span><br><span class="line">    　n = len(nodes)</span><br><span class="line">    　codes = [<span class="string">''</span>]*n</span><br><span class="line">    　<span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">        　tmp_node = nodes[i]</span><br><span class="line">        　<span class="keyword">while</span> tmp_node != root:</span><br><span class="line">            　<span class="keyword">if</span> tmp_node.parent.lchild == tmp_node:</span><br><span class="line">                　codes[i] = <span class="string">'0'</span> + codes[i]</span><br><span class="line">            　<span class="keyword">else</span>:</span><br><span class="line">                　codes[i] = <span class="string">'1'</span> + codes[i]</span><br><span class="line">            　tmp_node = tmp_node.parent</span><br><span class="line">    　<span class="keyword">return</span> codes</span><br></pre></td></tr></table></figure><br>或者:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> heapq <span class="keyword">import</span> heapify, heappush, heappop</span><br><span class="line"><span class="keyword">from</span> itertools <span class="keyword">import</span> count</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">huffman</span><span class="params">(seq, frq)</span>:</span></span><br><span class="line">    num = count()</span><br><span class="line">    trees = list(zip(frq, num, seq))            <span class="comment"># num ensures valid ordering</span></span><br><span class="line">    heapify(trees)                              <span class="comment"># A min-heap based on freq</span></span><br><span class="line">    <span class="keyword">while</span> len(trees) &gt; <span class="number">1</span>:                       <span class="comment"># Until all are combined</span></span><br><span class="line">        fa, _, a = heappop(trees)               <span class="comment"># Get the two smallest trees</span></span><br><span class="line">        fb, _, b = heappop(trees)</span><br><span class="line">        n = next(num)</span><br><span class="line">        heappush(trees, (fa+fb, n, [a, b]))     <span class="comment"># Combine and re-add them</span></span><br><span class="line">    <span class="comment"># print trees</span></span><br><span class="line">    <span class="keyword">return</span> trees[<span class="number">0</span>][<span class="number">-1</span>]</span><br><span class="line"></span><br><span class="line">seq = <span class="string">"abcdefghi"</span></span><br><span class="line">frq = [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">9</span>, <span class="number">11</span>, <span class="number">12</span>, <span class="number">15</span>, <span class="number">16</span>, <span class="number">20</span>]</span><br><span class="line"><span class="keyword">print</span> huffman(seq, frq)</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据结构/" rel="tag">#数据结构</a>
+          
+            <a href="/tags/二叉树/" rel="tag">#二叉树</a>
+          
+            <a href="/tags/哈夫曼树/" rel="tag">#哈夫曼树</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/04/25/机器学习算法介绍-二-决策树/" rel="next" title="机器学习算法介绍(二)--决策树">
+                <i class="fa fa-chevron-left"></i> 机器学习算法介绍(二)--决策树
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/02/机器学习算法介绍-三-Adaboost/" rel="prev" title="机器学习算法介绍(三)--Adaboost">
+                机器学习算法介绍(三)--Adaboost <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/04/28/哈夫曼树/" data-title="哈夫曼树" data-url="http://yoursite.com/2016/04/28/哈夫曼树/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/default_avatar.jpg" alt="Siqi Xiang">
+          <p class="site-author-name" itemprop="name">Siqi Xiang</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">23</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sqxiang" target="_blank" title="github">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/1978268491" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">This post does not have a Table of Contents</p>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Siqi Xiang</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"sqxiang"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("8DLu5uaqHg23PnzE4XOMzT4C-gzGzoHsz", "HnUpGtm2HfJiKUvs5qNdJXxd");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+</body>
+</html>
